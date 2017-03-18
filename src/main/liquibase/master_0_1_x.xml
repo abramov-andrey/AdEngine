@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="master/0_1_x.xml">
+
+	<changeSet id="CreateTables" author="a_abramov@adamantium.net">
+		<sql>
+			create table BANNERSIZE(
+				ID int(11) not null auto_increment,
+				HEIGHT int(11) not null,
+				WIDTH int(11) not null,
+				primary key (ID),
+				unique index WIDTH (WIDTH, HEIGHT)
+			)
+			engine = innodb
+			auto_increment = 7
+			character set utf8
+			collate utf8_general_ci;
+
+			create table BANNER(
+				ID int(11) not null auto_increment,
+				IMAGE longblob default null,
+				NAME varchar(255) default null,
+				BANNERSIZE_ID int(11) not null,
+				primary key (ID),
+				index FK762A6B4C578C4FA6 (BANNERSIZE_ID),
+				constraint FK762A6B4C578C4FA6 foreign key (BANNERSIZE_ID)
+				references BANNERSIZE (ID) on delete restrict on update restrict
+			)
+			engine = innodb
+			auto_increment = 11
+			character set utf8
+			collate utf8_general_ci;
+
+			create table BANNERSTATISTICS(
+				ID int(11) not null auto_increment,
+				BANNERID int(11) default null,
+				CALLSNUMBER bigint(20) default null,
+				primary key (ID),
+				unique index BANNERID (BANNERID)
+			)
+			engine = innodb
+			auto_increment = 2
+			avg_row_length = 16384
+			character set utf8
+			collate utf8_general_ci;
+		</sql>
+		<rollback>
+			<dropTable tableName="banner"/>
+			<dropTable tableName="bannersize"/>
+			<dropTable tableName="bannerstatistics"/>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>
+
+        
